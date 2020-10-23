@@ -133,6 +133,8 @@ def calcPD(data):
     # ((df['LICP'] - df['RICP'])**2).sum()
     print(euclidDist)
     print("all ret values printed in calcPD")
+
+    df3d = getLandmark3D
     return [df['LICP'],df['RICP'],euclidDist]
     # print(np.sqrt(euclidDist))
     #calculating 3d distance

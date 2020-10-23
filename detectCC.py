@@ -249,7 +249,7 @@ args = ap.parse_args()
 image = cv.imread(args.image)
 ratio = image.shape[0] / 500.0
 orig = image.copy()
-image = imutils.resize(image, height = 500)
+image = imutils.resize(image, height = 800)
 ppM = None 
 cc_width = 85.6 #unit in mm 
 # convert the image to grayscale, blur it, and find edges
@@ -262,7 +262,7 @@ print("STEP 1: Edge Detection")
 justEdge = np.nonzero(~edged) 
 cnts = cv.findContours(edged.copy(), cv.RETR_LIST, cv.CHAIN_APPROX_SIMPLE)
 cnts = imutils.grab_contours(cnts)
-print("this is num of contours {}".format(len(cnts)))
+# print("this is num of contours {}".format(len(cnts)))
 cnts = sorted(cnts, key = cv.contourArea,reverse=True)[:10]
 # loop over the contours
 for c in cnts:
@@ -277,9 +277,11 @@ for c in cnts:
 # show the contour (outline) of the piece of paper
 print("STEP 2: Find contours of paper")
 cv.drawContours(image, [screenCnt], -1, (0, 128, 255), 2)
-print(tuple(screenCnt[0][0])[0])
-print(screenCnt)
-print(screenCnt.shape)
+# print(tuple(screenCnt[0][0])[0])
+# print(screenCnt)
+# print(screenCnt.shape)
+# cntDF = pd.DataFrame(screenCnt)
+# print("this is screen cnt as df {}".format(cntDF))
 tr_point =  tuple(screenCnt[0,0]) #tuple([613,160])
 tl_point = tuple(screenCnt[1,0]) #tuple([477,161])
 bl_point = tuple(screenCnt[2,0]) #tuple([476,246])
@@ -304,17 +306,25 @@ print("here is dA {}".format(dA))
 # dB = dist.euclidean((tlblX,tlblY),(trbrX,trbrY))
 # dB = dist.euclidean((bl_point[0],bl_point[1]),(br_point[0],br_point[1]))
 dB = dist.euclidean(bl_point,br_point)
-print("here are coordinate for tlblX and tlblY {}".format((tlblX,tlblY)))
-print("here are coordinate for trbrX and trbrY {}".format((trbrX,trbrY)))
-print("here is db {}".format(dB))
+# print("here are coordinate for tlblX and tlblY {}".format((tlblX,tlblY)))
+# print("here are coordinate for trbrX and trbrY {}".format((trbrX,trbrY)))
+# print("here is db {}".format(dB))
 if ppM is None:
     ppM = dB/cc_width
     print("here is ppm {}".format(ppM))
 dimA = dA/ppM
 dimB = dB/ ppM
 
-licp, ricp, pdA = calcPD(args["filename"])
+data = pd.read_csv(args.file)
+licp, ricp, pdA = calcPD(data)
+
+print("convert series to tuple {}".format(tuple(licp)))
 #draw pupil markers on eye.
+licp[0] = int(licp[0])
+licp[1] = int(licp[1])
+print("LICP {}".format(licp[0]))
+cv.circle(image,(582,428),13,(0,0,255),-1) #red
+cv.circle(image,tl_point,3,(0,255,0),-1) #green
 
 print("these are the corner values of screencnt {}".format(screenCnt))
 cv.circle(image,tr_point,3,(0,0,255),-1) #red
