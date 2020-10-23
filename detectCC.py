@@ -7,8 +7,11 @@ from matplotlib import pyplot as plt
 import imutils
 from imutils import contours, perspective
 from scipy.spatial import distance as dist
-
-
+from processfile import *
+"""
+TO DO
+use threshold to ignore the background images
+"""
 def midpoint(ptA,ptB):
     return ((ptA[0]+ptB[0])*0.5, (ptA[1]+ptB[1])*0.5)
 
@@ -40,67 +43,76 @@ def resizeWindow(img,height=800):
     return image
 
 
-ap = argparse.ArgumentParser()
-ap.add_argument("-i","--image", help="image path")
-args = vars(ap.parse_args())
+# ap = argparse.ArgumentParser()
+# ap.add_argument("-i","--image", help="image path")
+# args = vars(ap.parse_args())
 
-#learning edge detection.
+# #learning edge detection.
 
-img = cv.imread(args['image'])
-# resizeimg = resizeWindow(img)
-res = imutils.resize(img,800)
-#STEP 1 #####################
-# cv.imshow('img', res)
+# img = cv.imread(args['image'])
+# canvas = np.zeros(img.shape,np.uint8)
+# res = imutils.resize(img,800)
+# #STEP 1 #####################
+# # cv.imshow('img', res)
+# # cv.waitKey(0)
+# print("step 0 image resize SUCCESS")
+# #always check num channels and src type
+# # kernel = np.ones((5,5),np.uint8)
+# gray = cv.cvtColor(img, cv.COLOR_BGR2GRAY)
+# gray2 = gray.copy()
+# gauss = cv.GaussianBlur(gray,(5,5),0)
+# # bilateral = cv.bilateralFilter(gray,9,75,75) worse edge detection
+# #lets see imgs side by side og and blur
+# # openimg = cv.morphologyEx(bilateral,cv.MORPH_OPEN,kernel)
+# # closeimg = cv.morphologyEx(gauss,cv.MORPH_CLOSE,kernel)
+# edges = cv.Canny(gauss,75,200)
+# #STEP 2############################
+# # res = imutils.resize(edges,800)
+# # cv.imshow("edge detected",res)
+# # cv.waitKey(0)
+
+# # edges = cv.dilate(edges, None, iterations=1)
+# # edges = cv.erode(edges,None,iterations=1)
+
+# # lines = cv.HoughLinesP(edges,1,np.pi/180,60,np.array([]),50,5)
+# # for line in lines:
+# #     for x1, y1, x2, y2 in line:
+# #         cv.line(inp,(x1,y1),(x2,y2),(255,0,0),6)
+# #         cv.line(edges,(x1,y1),(x2,y2),(255,0,0),3)
+
+# # adjacentImg = np.concatenate((inp,edges),axis=1)
+
+# # resizedImg = resizeWindow(adjacentImg)
+
+# # cv.imshow('Edge Detection 1.0', resizedImg)
+# # cv.imwrite('FailedEdgeDetection.png', resizedImg)
+# # cv.imshow('compare img bilateral', resizedImg2)
+# # cv.imshow("original", img)
+# # cv.imshow("edges",edges)
+# # cv.waitKey(0)
+# cnts = cv.findContours(edges.copy(),cv.RETR_LIST,cv.CHAIN_APPROX_SIMPLE)
+# cnts = imutils.grab_contours(cnts)
+# print("this is num of contours {}".format(len(cnts)))
+# cnts = sorted(cnts, key = cv.contourArea,reverse=True)[:10]
+# # loop over the contours
+# for c in cnts:
+# 	# approximate the contour
+# 	peri = cv.arcLength(c, True)
+# 	approx = cv.approxPolyDP(c, 0.02 * peri, True)
+# 	# if our approximated contour has four points, then we
+# 	# can assume that we have found our screen
+# 	if len(approx) == 4:
+# 		cardCnt = approx
+# 		break
+# # hull = cv.convexHull(cnts)
+# #step 3 ###########################
+# print("STEP 3. find contour corner points using polyDP ")
+# cv.drawContours(edges,cardCnt,-1,(255,255,0),3)
+# cv.drawContours(og,[cardCnt],-1,(0,255,0),3)
+# adjacentImg = np.concatenate((gray2,edges),axis=1)
+# resizedimg = resizeWindow(adjacentImg)
+# cv.imshow("OG      4 point DP        edges",resizedimg)
 # cv.waitKey(0)
-print("step 0 image resize SUCCESS")
-#always check num channels and src type
-# kernel = np.ones((5,5),np.uint8)
-gray = cv.cvtColor(img, cv.COLOR_BGR2GRAY)
-gauss = cv.GaussianBlur(gray,(7,7),0)
-# bilateral = cv.bilateralFilter(gray,9,75,75) worse edge detection
-#lets see imgs side by side og and blur
-# openimg = cv.morphologyEx(bilateral,cv.MORPH_OPEN,kernel)
-# closeimg = cv.morphologyEx(gauss,cv.MORPH_CLOSE,kernel)
-edges = cv.Canny(gauss,50,100)
-#STEP 2############################
-# res = imutils.resize(edges,800)
-# cv.imshow("edge detected",res)
-# cv.waitKey(0)
-
-# edges = cv.dilate(edges, None, iterations=1)
-# edges = cv.erode(edges,None,iterations=1)
-
-# lines = cv.HoughLinesP(edges,1,np.pi/180,60,np.array([]),50,5)
-# for line in lines:
-#     for x1, y1, x2, y2 in line:
-#         cv.line(inp,(x1,y1),(x2,y2),(255,0,0),6)
-#         cv.line(edges,(x1,y1),(x2,y2),(255,0,0),3)
-
-# adjacentImg = np.concatenate((inp,edges),axis=1)
-
-# resizedImg = resizeWindow(adjacentImg)
-
-# cv.imshow('Edge Detection 1.0', resizedImg)
-# cv.imwrite('FailedEdgeDetection.png', resizedImg)
-# cv.imshow('compare img bilateral', resizedImg2)
-# cv.imshow("original", img)
-# cv.imshow("edges",edges)
-# cv.waitKey(0)
-cnts = cv.findContours(edges.copy(),cv.RETR_TREE,cv.CHAIN_APPROX_SIMPLE)
-cnts = imutils.grab_contours(cnt)
-print("this is num of contours {}".format(len(cnts)))
-cnts = sorted(cnts, key = cv.contourArea,reverse=True)[:10]
-# loop over the contours
-for c in cnts:
-	# approximate the contour
-	peri = cv.arcLength(c, True)
-	approx = cv.approxPolyDP(c, 0.02 * peri, True)
-	# if our approximated contour has four points, then we
-	# can assume that we have found our screen
-	if len(approx) == 4:
-		cardCnt = approx
-		break
-
 # (cnt,_)= contours.sort_contours(cnt)
 # ppM = None
 
@@ -111,7 +123,7 @@ for c in cnts:
 
 #     og = img.copy()
 #     box = cv.minAreaRect(c)
-#     box = cv.cv.boxPoints(box) if imutils.is_cv2() else cv.boxPoints(box)
+#     box = cv.cv.boxPoints(box) if imutils.is_cv() else cv.boxPoints(box)
 #     box = np.array(box,dtype='int')
 
 
@@ -215,3 +227,104 @@ for c in cnts:
 # cv.createTrackbar('Canny thresh:', source_window, thresh, max_thresh, thresh_callback)
 # thresh_callback(thresh)
 # cv.waitKey()
+
+
+
+
+#######################
+"""""
+ I'm getting the corners I need.
+ Just need to test the distance
+ really hope this works
+ 
+ """
+
+
+ap = argparse.ArgumentParser()
+ap.add_argument("-i","--image", help="image path")
+ap.add_argument("-f", "--file",help = "file path")
+args = ap.parse_args()
+# load the image and compute the ratio of the old height
+# to the new height, clone it, and resize it
+image = cv.imread(args.image)
+ratio = image.shape[0] / 500.0
+orig = image.copy()
+image = imutils.resize(image, height = 500)
+ppM = None 
+cc_width = 85.6 #unit in mm 
+# convert the image to grayscale, blur it, and find edges
+# in the image
+gray = cv.cvtColor(image, cv.COLOR_BGR2GRAY)
+gray = cv.GaussianBlur(gray, (5, 5), 0)
+edged = cv.Canny(gray, 75, 200)
+# show the original image and the edge detected image
+print("STEP 1: Edge Detection")
+justEdge = np.nonzero(~edged) 
+cnts = cv.findContours(edged.copy(), cv.RETR_LIST, cv.CHAIN_APPROX_SIMPLE)
+cnts = imutils.grab_contours(cnts)
+print("this is num of contours {}".format(len(cnts)))
+cnts = sorted(cnts, key = cv.contourArea,reverse=True)[:10]
+# loop over the contours
+for c in cnts:
+	# approximate the contour
+	peri = cv.arcLength(c, True)
+	approx = cv.approxPolyDP(c, 0.02 * peri, True)
+	# if our approximated contour has four points, then we
+	# can assume that we have found our screen
+	if len(approx) == 4:
+		screenCnt = approx
+		break
+# show the contour (outline) of the piece of paper
+print("STEP 2: Find contours of paper")
+cv.drawContours(image, [screenCnt], -1, (0, 128, 255), 2)
+print(tuple(screenCnt[0][0])[0])
+print(screenCnt)
+print(screenCnt.shape)
+tr_point =  tuple(screenCnt[0,0]) #tuple([613,160])
+tl_point = tuple(screenCnt[1,0]) #tuple([477,161])
+bl_point = tuple(screenCnt[2,0]) #tuple([476,246])
+br_point = tuple(screenCnt[3,0]) #tuple([612,244])
+tltrX,tltrY = midpoint(tl_point,tr_point)
+blbrX,blbrY = midpoint(bl_point,br_point)
+tlblX,tlblY = midpoint(tl_point,bl_point)
+trbrX,trbrY = midpoint(tr_point,br_point)
+#channels are (B,G,R)
+cv.circle(image,(int(tltrX),int(tltrY)),3,(0,0,0),-1) #black
+cv.circle(image,(int(blbrX),int(blbrY)),3,(0,25,51),-1) #brown
+cv.circle(image,(int(tlblX),int(tlblY)),3,(255,0,127),-1) #purple
+cv.circle(image,(int(trbrX),int(trbrY)),3,(0,51,0),-1) #forest green
+
+cv.line(image,(int(tltrX),int(tltrY)),(int(blbrX),int(blbrY)),(255,0,255),2) #pink
+cv.line(image,(int(tlblX),int(tlblY)),(int(trbrX),int(trbrY)),(255,255,255),2) #white
+
+# dA = dist.euclidean((tltrX,tltrY),(blbrX,blbrY))
+# dA = dist.euclidean((tl_point[0],tl_point[1]),(bl_point[0],bl_point[1]))
+dA = dist.euclidean(tl_point,bl_point)
+print("here is dA {}".format(dA))
+# dB = dist.euclidean((tlblX,tlblY),(trbrX,trbrY))
+# dB = dist.euclidean((bl_point[0],bl_point[1]),(br_point[0],br_point[1]))
+dB = dist.euclidean(bl_point,br_point)
+print("here are coordinate for tlblX and tlblY {}".format((tlblX,tlblY)))
+print("here are coordinate for trbrX and trbrY {}".format((trbrX,trbrY)))
+print("here is db {}".format(dB))
+if ppM is None:
+    ppM = dB/cc_width
+    print("here is ppm {}".format(ppM))
+dimA = dA/ppM
+dimB = dB/ ppM
+
+pdA = calcPD(args["filename"])
+
+print("these are the corner values of screencnt {}".format(screenCnt))
+cv.circle(image,tr_point,3,(0,0,255),-1) #red
+cv.circle(image,tl_point,3,(0,255,0),-1) #green
+cv.circle(image,bl_point,3,(255,0,0),-1) #blue
+cv.circle(image,br_point,3,(0,255,255),-1) #yellow
+
+cv.putText(image,"height{:.1f}mm".format(dimA),(int(tltrX -15),int(tltrY-10)),cv.FONT_HERSHEY_SIMPLEX,.65,(255,255,255),2)
+cv.putText(image,"width{:.1f}mm".format(dimB),(int(trbrX +1),int(trbrY)),cv.FONT_HERSHEY_SIMPLEX,.65,(255,255,255),2)
+print("Based on our PPI, this is the height of the credit card {}".format(dimA))
+cv.imshow("measurements", image)
+# cv.imwrite("img/CCedge.jpg",image)
+cv.waitKey(0)
+cv.destroyAllWindows()

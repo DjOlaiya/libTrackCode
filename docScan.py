@@ -60,6 +60,17 @@ for c in cnts:
 # show the contour (outline) of the piece of paper
 print("STEP 2: Find contours of paper")
 cv2.drawContours(image, [screenCnt], -1, (0, 255, 0), 2)
+print(tuple(screenCnt[2,0]))
+print(tuple(screenCnt))
+tr_point =  tuple(screenCnt[0,0]) #tuple([613,160])
+tl_point = tuple(screenCnt[1,0]) #tuple([477,161])
+bl_point = tuple(screenCnt[2,0]) #tuple([476,246])
+br_point = tuple(screenCnt[3,0]) #tuple([612,244])
+print("these are the corner values of screencnt {}".format(screenCnt))
+cv2.circle(image,tr_point,4,(0,0,255),-1) #red
+cv2.circle(image,tl_point,4,(0,255,0),-1) #green
+cv2.circle(image,bl_point,4,(255,0,0),-1) #blue
+cv2.circle(image,br_point,8,(0,255,255),-1) #yellow
 cv2.imshow("Outline", image)
 cv2.waitKey(0)
 cv2.destroyAllWindows()
