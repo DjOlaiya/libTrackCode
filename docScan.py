@@ -34,7 +34,11 @@ print("STEP 1: Edge Detection")
 # cv2.imshow("Edged", edged)
 # cv2.waitKey(0)
 # cv2.destroyAllWindows()
-justEdge = np.nonzero(~edged)
+justEdge = np.nonzero(~edged) # ~ is the negate operator. it just prints out everything why? 
+"""
+Ok this is important. the ~ operator reverses the bits of an obj.
+The formula is essentially: (-x) - 1 for any x. So how does that help here?
+ """
 print(type(edged))
 save_toFile(np.asarray(justEdge), 'edgeArray.yml')
 # find the contours in the edged image, keeping only the

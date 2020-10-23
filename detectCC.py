@@ -49,6 +49,7 @@ args = vars(ap.parse_args())
 img = cv.imread(args['image'])
 # resizeimg = resizeWindow(img)
 res = imutils.resize(img,800)
+#STEP 1 #####################
 # cv.imshow('img', res)
 # cv.waitKey(0)
 print("step 0 image resize SUCCESS")
@@ -61,14 +62,13 @@ gauss = cv.GaussianBlur(gray,(7,7),0)
 # openimg = cv.morphologyEx(bilateral,cv.MORPH_OPEN,kernel)
 # closeimg = cv.morphologyEx(gauss,cv.MORPH_CLOSE,kernel)
 edges = cv.Canny(gauss,50,100)
-res = imutils.resize(edges,800)
-cv.imshow("edge detected",res)
-cv.waitKey(0)
+#STEP 2############################
+# res = imutils.resize(edges,800)
+# cv.imshow("edge detected",res)
+# cv.waitKey(0)
 nonzero_edgeval = np.nonzero(~edges) 
 print("step 1 find edges {}".format(nonzero_edgeval))
 
-
-# # edges2 = cv.Canny(inp2,50,100)
 # edges = cv.dilate(edges, None, iterations=1)
 # edges = cv.erode(edges,None,iterations=1)
 
@@ -88,8 +88,8 @@ print("step 1 find edges {}".format(nonzero_edgeval))
 # cv.imshow("original", img)
 # cv.imshow("edges",edges)
 # cv.waitKey(0)
-# cnt = cv.findContours(edges.copy(),cv.RETR_TREE,cv.CHAIN_APPROX_SIMPLE)
-# cnt = imutils.grab_contours(cnt)
+cnt = cv.findContours(edges.copy(),cv.RETR_TREE,cv.CHAIN_APPROX_SIMPLE)
+cnt = imutils.grab_contours(cnt)
 
 # (cnt,_)= contours.sort_contours(cnt)
 # ppM = None
