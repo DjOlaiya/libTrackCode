@@ -66,8 +66,6 @@ edges = cv.Canny(gauss,50,100)
 # res = imutils.resize(edges,800)
 # cv.imshow("edge detected",res)
 # cv.waitKey(0)
-nonzero_edgeval = np.nonzero(~edges) 
-print("step 1 find edges {}".format(nonzero_edgeval))
 
 # edges = cv.dilate(edges, None, iterations=1)
 # edges = cv.erode(edges,None,iterations=1)
@@ -88,8 +86,20 @@ print("step 1 find edges {}".format(nonzero_edgeval))
 # cv.imshow("original", img)
 # cv.imshow("edges",edges)
 # cv.waitKey(0)
-cnt = cv.findContours(edges.copy(),cv.RETR_TREE,cv.CHAIN_APPROX_SIMPLE)
-cnt = imutils.grab_contours(cnt)
+cnts = cv.findContours(edges.copy(),cv.RETR_TREE,cv.CHAIN_APPROX_SIMPLE)
+cnts = imutils.grab_contours(cnt)
+print("this is num of contours {}".format(len(cnts)))
+cnts = sorted(cnts, key = cv.contourArea,reverse=True)[:10]
+# loop over the contours
+for c in cnts:
+	# approximate the contour
+	peri = cv.arcLength(c, True)
+	approx = cv.approxPolyDP(c, 0.02 * peri, True)
+	# if our approximated contour has four points, then we
+	# can assume that we have found our screen
+	if len(approx) == 4:
+		cardCnt = approx
+		break
 
 # (cnt,_)= contours.sort_contours(cnt)
 # ppM = None

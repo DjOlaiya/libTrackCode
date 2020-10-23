@@ -34,7 +34,7 @@ print("STEP 1: Edge Detection")
 # cv2.imshow("Edged", edged)
 # cv2.waitKey(0)
 # cv2.destroyAllWindows()
-justEdge = np.nonzero(~edged) # ~ is the negate operator. it just prints out everything why? 
+justEdge = np.nonzero(~edged) 
 """
 Ok this is important. the ~ operator reverses the bits of an obj.
 The formula is essentially: (-x) - 1 for any x. So how does that help here?
@@ -58,11 +58,11 @@ for c in cnts:
 		screenCnt = approx
 		break
 # show the contour (outline) of the piece of paper
-# print("STEP 2: Find contours of paper")
-# cv2.drawContours(image, [screenCnt], -1, (0, 255, 0), 2)
-# cv2.imshow("Outline", image)
-# cv2.waitKey(0)
-# cv2.destroyAllWindows()
+print("STEP 2: Find contours of paper")
+cv2.drawContours(image, [screenCnt], -1, (0, 255, 0), 2)
+cv2.imshow("Outline", image)
+cv2.waitKey(0)
+cv2.destroyAllWindows()
 
 # apply the four point transform to obtain a top-down
 # view of the original image
@@ -74,7 +74,7 @@ T = threshold_local(warped, 11, offset = 10, method = "gaussian")
 warped = (warped > T).astype("uint8") * 255
 # show the original and scanned images
 print("STEP 3: Apply perspective transform")
-cv2.imshow("Original", imutils.resize(orig, height = 650))
-cv2.imshow("Scanned", imutils.resize(warped, height = 650))
-cv2.waitKey(0)
+# cv2.imshow("Original", imutils.resize(orig, height = 650))
+# cv2.imshow("Scanned", imutils.resize(warped, height = 650))
+# cv2.waitKey(0)
 
