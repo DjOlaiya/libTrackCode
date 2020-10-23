@@ -132,7 +132,9 @@ def calcPD(data):
     euclidDist = dist.euclidean(df['LICP'],df['RICP'])
     # ((df['LICP'] - df['RICP'])**2).sum()
     print(euclidDist)
-    print(np.sqrt(euclidDist))
+    print("all ret values printed in calcPD")
+    return [df['LICP'],df['RICP'],euclidDist]
+    # print(np.sqrt(euclidDist))
     #calculating 3d distance
     # ocp_pd = 
     #est the mono pd by finding avg in iris

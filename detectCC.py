@@ -313,7 +313,8 @@ if ppM is None:
 dimA = dA/ppM
 dimB = dB/ ppM
 
-pdA = calcPD(args["filename"])
+licp, ricp, pdA = calcPD(args["filename"])
+#draw pupil markers on eye.
 
 print("these are the corner values of screencnt {}".format(screenCnt))
 cv.circle(image,tr_point,3,(0,0,255),-1) #red
