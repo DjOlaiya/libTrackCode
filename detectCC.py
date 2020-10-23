@@ -33,7 +33,7 @@ def drawLine():
     vc.release()
     cv.destroyWindow("preview")   
 
-def resizeWindow(img,height=1600):
+def resizeWindow(img,height=800):
     ratio = float(img.shape[1]/img.shape[0])
     width = height/ratio
     image = cv.resize(img,(int(height),int(width)))
@@ -45,46 +45,49 @@ ap.add_argument("-i","--image", help="image path")
 args = vars(ap.parse_args())
 
 #learning edge detection.
-img = cv.imread(args['image'])
-# cv.imshow('img', img)
-# img = cv
 
+img = cv.imread(args['image'])
+# resizeimg = resizeWindow(img)
+res = imutils.resize(img,800)
+# cv.imshow('img', res)
+# cv.waitKey(0)
+print("step 0 image resize SUCCESS")
 #always check num channels and src type
-# print('img channels ', img.shape,'\n','imge type',img.dtype)
-kernel = np.ones((5,5),np.uint8)
+# kernel = np.ones((5,5),np.uint8)
 gray = cv.cvtColor(img, cv.COLOR_BGR2GRAY)
 gauss = cv.GaussianBlur(gray,(7,7),0)
 # bilateral = cv.bilateralFilter(gray,9,75,75) worse edge detection
 #lets see imgs side by side og and blur
 # openimg = cv.morphologyEx(bilateral,cv.MORPH_OPEN,kernel)
-closeimg = cv.morphologyEx(gauss,cv.MORPH_CLOSE,kernel)
-# closeimg2 = cv.morphologyEx(bilateral,cv.MORPH_CLOSE,kernel)
-inp = gauss
-# inp2 = bilateral
-edges = cv.Canny(inp,50,100)
-print("step 1 find edges {}".format(edges))
-cv.imshow("edge detected",edges)
-# edges2 = cv.Canny(inp2,50,100)
-edges = cv.dilate(edges, None, iterations=1)
-edges = cv.erode(edges,None,iterations=1)
-
-lines = cv.HoughLinesP(edges,1,np.pi/180,60,np.array([]),50,5)
-for line in lines:
-    for x1, y1, x2, y2 in line:
-        cv.line(inp,(x1,y1),(x2,y2),(255,0,0),6)
-        cv.line(edges,(x1,y1),(x2,y2),(255,0,0),3)
-# edges2 = cv.dilate(edges2, None, iterations=1)
-# edges2 = cv.erode(edges2,None,iterations=1)
-adjacentImg = np.concatenate((inp,edges),axis=1)
-# adjacentImg2 = np.concatenate((inp2,edges2),axis=1)
-resizedImg = resizeWindow(adjacentImg)
-# resizedImg2 = resizeWindow(adjacentImg2)
-cv.imshow('Edge Detection 1.0', resizedImg)
-cv.imwrite('FailedEdgeDetection.png', resizedImg)
-# cv.imshow('compare img bilateral', resizedImg2)
-cv.imshow("original", img)
-cv.imshow("edges",edges)
+# closeimg = cv.morphologyEx(gauss,cv.MORPH_CLOSE,kernel)
+edges = cv.Canny(gauss,50,100)
+res = imutils.resize(edges,800)
+cv.imshow("edge detected",res)
 cv.waitKey(0)
+nonzero_edgeval = np.nonzero(~edges) 
+print("step 1 find edges {}".format(nonzero_edgeval))
+
+
+# # edges2 = cv.Canny(inp2,50,100)
+# edges = cv.dilate(edges, None, iterations=1)
+# edges = cv.erode(edges,None,iterations=1)
+
+# lines = cv.HoughLinesP(edges,1,np.pi/180,60,np.array([]),50,5)
+# for line in lines:
+#     for x1, y1, x2, y2 in line:
+#         cv.line(inp,(x1,y1),(x2,y2),(255,0,0),6)
+#         cv.line(edges,(x1,y1),(x2,y2),(255,0,0),3)
+
+# adjacentImg = np.concatenate((inp,edges),axis=1)
+
+# resizedImg = resizeWindow(adjacentImg)
+
+# cv.imshow('Edge Detection 1.0', resizedImg)
+# cv.imwrite('FailedEdgeDetection.png', resizedImg)
+# cv.imshow('compare img bilateral', resizedImg2)
+# cv.imshow("original", img)
+# cv.imshow("edges",edges)
+# cv.waitKey(0)
 # cnt = cv.findContours(edges.copy(),cv.RETR_TREE,cv.CHAIN_APPROX_SIMPLE)
 # cnt = imutils.grab_contours(cnt)
 
@@ -151,38 +154,38 @@ cv.waitKey(0)
 # plt.show()
 # cv.waitKey()
 
-rng.seed(12345)
-def thresh_callback(val):
-    threshold = val
+# rng.seed(12345)
+# def thresh_callback(val):
+#     threshold = val
     
-    canny_output = cv.Canny(src_gray, threshold, threshold * 2)
-    
-    
-    contours, _ = cv.findContours(canny_output, cv.RETR_TREE, cv.CHAIN_APPROX_SIMPLE)
+#     canny_output = cv.Canny(src_gray, threshold, threshold * 2)
     
     
-    contours_poly = [None]*len(contours)
-    boundRect = [None]*len(contours)
-    centers = [None]*len(contours)
-    radius = [None]*len(contours)
-    for i, c in enumerate(contours):
-        contours_poly[i] = cv.approxPolyDP(c, 3, True)
-        boundRect[i] = cv.boundingRect(contours_poly[i])
-        centers[i], radius[i] = cv.minEnclosingCircle(contours_poly[i])
+#     contours, _ = cv.findContours(canny_output, cv.RETR_TREE, cv.CHAIN_APPROX_SIMPLE)
     
     
-    drawing = np.zeros((canny_output.shape[0], canny_output.shape[1], 3), dtype=np.uint8)
+#     contours_poly = [None]*len(contours)
+#     boundRect = [None]*len(contours)
+#     centers = [None]*len(contours)
+#     radius = [None]*len(contours)
+#     for i, c in enumerate(contours):
+#         contours_poly[i] = cv.approxPolyDP(c, 3, True)
+#         boundRect[i] = cv.boundingRect(contours_poly[i])
+#         centers[i], radius[i] = cv.minEnclosingCircle(contours_poly[i])
     
     
-    for i in range(len(contours)):
-        color = (rng.randint(0,256), rng.randint(0,256), rng.randint(0,256))
-        cv.drawContours(drawing, contours_poly, i, color)
-        cv.rectangle(drawing, (int(boundRect[i][0]), int(boundRect[i][1])), \
-          (int(boundRect[i][0]+boundRect[i][2]), int(boundRect[i][1]+boundRect[i][3])), color, 2)
-        cv.circle(drawing, (int(centers[i][0]), int(centers[i][1])), int(radius[i]), color, 2)
+#     drawing = np.zeros((canny_output.shape[0], canny_output.shape[1], 3), dtype=np.uint8)
     
     
-    cv.imshow('Contours', drawing)
+#     for i in range(len(contours)):
+#         color = (rng.randint(0,256), rng.randint(0,256), rng.randint(0,256))
+#         cv.drawContours(drawing, contours_poly, i, color)
+#         cv.rectangle(drawing, (int(boundRect[i][0]), int(boundRect[i][1])), \
+#           (int(boundRect[i][0]+boundRect[i][2]), int(boundRect[i][1]+boundRect[i][3])), color, 2)
+#         cv.circle(drawing, (int(centers[i][0]), int(centers[i][1])), int(radius[i]), color, 2)
+    
+    
+#     cv.imshow('Contours', drawing)
     
 # parser = argparse.ArgumentParser(description='Code for Creating Bounding boxes and circles for contours tutorial.')
 # parser.add_argument('--input', help='Path to input image.', default='stuff.jpg')
