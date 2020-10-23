@@ -2,3 +2,4 @@ venv/
 webcamChessboard/
 newChessboard/
 gitchessboard/
+__pycache__/
