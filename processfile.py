@@ -1,61 +1,140 @@
 import numpy as np
 import pandas as pd
 import argparse
+from scipy.spatial import distance as dist
+"""
+fdgdfgdf
+TO DO
+remove duplicated code
+"""
 
-#rewrite as func
-#  # 
-#     data = pd.read_csv('andrewcalib.csv')
-#     nodata = pd.read_csv('djfacenocalib.csv')
-def getLandmark(data):
-    df = pd.DataFrame(data, index=pd.Index(['X','Y','Z'],name='Axis'),columns=pd.Index(['LOCP','ROCP','LICP','RICP','NB','ROCE','RICE','LOCE','LICE'],name='ROI'))
+def getLandmark2D(data):
+    """
+        Input: csv landmarks file, parses for relevant landmarks from 2D  
+        Landmarks (pixels): LOCP, ROCP, LICP, RICP NB ROCE RICE LOCE LICE.
+        Returns: dataframe composed of relevant landmarks for eye.
+
+
+    """
+    df2D = pd.DataFrame(data, index=pd.Index(['x','y'],name='Axis'),
+                        columns=pd.Index(['LOCP','ROCP','LICP','RICP',
+                                        'NB','ROCE','RICE','LOCE','LICE'],
+                                        name='ROI'))
+
     # landmarks based on reflected image. 
+    ############
+    # TO DO
+    """
+        strip white spaces in name
+        eliminate hard coding
+        try different combos to get more accurate PD
+    """
+    ############
     #LOCP
-    df['LOCP']['X'] = data[' eye_lmk_X_51'] # left outer corner pupil X 
-    df['LOCP']['Y'] = data[' eye_lmk_Y_51'] # left outer corner pupil Y
-    df['LOCP']['Z'] = data[' eye_lmk_Z_51'] # left outer corner pupil Z
+    df2D['LOCP']['x'] = data[' eye_lmk_x_51'] # left outer corner pupil x 
+    df2D['LOCP']['y'] = data[' eye_lmk_y_51'] # left outer corner pupil y
     #ROCP
-    df['ROCP']['X'] = data[' eye_lmk_X_27'] # right outer corner pupil X
-    df['ROCP']['Y'] = data[' eye_lmk_Y_27'] # right outer corner pupil Y
-    df['ROCP']['Z'] = data[' eye_lmk_Z_27'] # right outer corner pupil Z
+    df2D['ROCP']['x'] = data[' eye_lmk_x_27'] # right outer corner pupil x
+    df2D['ROCP']['y'] = data[' eye_lmk_y_27'] # right outer corner pupil y
     #LICP
-    df['LICP']['X'] = data[' eye_lmk_X_55'] # left inner corner pupil X
-    df['LICP']['Y'] = data[' eye_lmk_Y_55'] # left inner corner pupil Y
-    df['LICP']['Z'] = data[' eye_lmk_Z_55'] # left inner corner pupil Z
+    df2D['LICP']['x'] = data[' eye_lmk_x_55'] # left inner corner pupil x
+    df2D['LICP']['y'] = data[' eye_lmk_y_55'] # left inner corner pupil y
     #RICP
-    df['RICP']['X'] = data[' eye_lmk_X_23'] # right inner corner pupil X
-    df['RICP']['Y'] = data[' eye_lmk_Y_23'] # right inner corner pupil Y
-    df['RICP']['Z'] = data[' eye_lmk_Z_23'] # right inner corner pupil Z
+    df2D['RICP']['x'] = data[' eye_lmk_x_23'] # right inner corner pupil x
+    df2D['RICP']['y'] = data[' eye_lmk_y_23'] # right inner corner pupil y
     #NB
-    df['NB']['X'] = data[' X_27'] # nose bridge X
-    df['NB']['Y'] = data[' Y_27'] # nose bridge Y
-    df['NB']['Z'] = data[' Z_27'] # nose bridge Z
+    df2D['NB']['x'] = data[' x_27'] # nose bridge x
+    df2D['NB']['y'] = data[' y_27'] # nose bridge y
     #ROCE
-    df['ROCE']['X'] = data[' X_36'] # right outer corner eye X
-    df['ROCE']['Y'] = data[' Y_36'] # right outer corner eye Y
-    df['ROCE']['Z'] = data[' Z_36'] # right outer corner eye Z
+    df2D['ROCE']['x'] = data[' x_36'] # right outer corner eye x
+    df2D['ROCE']['y'] = data[' y_36'] # right outer corner eye y
     #RICE
-    df['RICE']['X'] = data[' X_39'] # right inner corner eye X
-    df['RICE']['Y'] = data[' Y_39'] # right inner corner eye Y
-    df['RICE']['Z'] = data[' Z_39'] # right inner corner eye Z
+    df2D['RICE']['x'] = data[' x_39'] # right inner corner eye x
+    df2D['RICE']['y'] = data[' y_39'] # right inner corner eye y
     #LOCE
-    df['LOCE']['X'] = data[' X_45'] # left outer corner eye X
-    df['LOCE']['Y'] = data[' Y_45'] # left outer corner eye Y
-    df['LOCE']['Z'] = data[' Z_45'] # left outer corner eye Z
+    df2D['LOCE']['x'] = data[' x_45'] # left outer corner eye x
+    df2D['LOCE']['y'] = data[' y_45'] # left outer corner eye y
     #LICE
-    df['LICE']['X'] = data[' X_42'] # left inner corner eye X
-    df['LICE']['Y'] = data[' Y_42'] # left inner corner eye Y
-    df['LICE']['Z'] = data[' Z_42'] # left inner corner eye Z
-    return df
+    df2D['LICE']['x'] = data[' x_42'] # left inner corner eye x
+    df2D['LICE']['y'] = data[' y_42'] # left inner corner eye y
+
+    return df2D
+
+
+def getLandmark3D(data):
+    """
+        Input: csv landmarks file, parses for relevant landmarks from 3D  
+        Landmarks (mm): LOCP, ROCP, LICP, RICP NB ROCE RICE LOCE LICE.
+        Returns: dataframe composed of relevant landmarks for eye.
+
+
+    """
+    df3D = pd.DataFrame(data, index=pd.Index(['X','Y','Z'],name='Axis'),columns=pd.Index(['LOCP','ROCP','LICP','RICP','NB','ROCE','RICE','LOCE','LICE'],name='ROI'))
+    df2D = df3D
+    # landmarks based on reflected image. 
+    ############
+    # TO DO
+    """
+        strip white spaces in name
+        eliminate hard coding
+        try different combos to get more accurate PD
+    """
+    ############
+    #LOCP
+    df3D['LOCP']['X'] = data[' eye_lmk_X_51'] # left outer corner pupil X 
+    df3D['LOCP']['Y'] = data[' eye_lmk_Y_51'] # left outer corner pupil Y
+    df3D['LOCP']['Z'] = data[' eye_lmk_Z_51'] # left outer corner pupil Z
+    #ROCP
+    df3D['ROCP']['X'] = data[' eye_lmk_X_27'] # right outer corner pupil X
+    df3D['ROCP']['Y'] = data[' eye_lmk_Y_27'] # right outer corner pupil Y
+    df3D['ROCP']['Z'] = data[' eye_lmk_Z_27'] # right outer corner pupil Z
+    #LICP
+    df3D['LICP']['X'] = data[' eye_lmk_X_55'] # left inner corner pupil X
+    df3D['LICP']['Y'] = data[' eye_lmk_Y_55'] # left inner corner pupil Y
+    df3D['LICP']['Z'] = data[' eye_lmk_Z_55'] # left inner corner pupil Z
+    #RICP
+    df3D['RICP']['X'] = data[' eye_lmk_X_23'] # right inner corner pupil X
+    df3D['RICP']['Y'] = data[' eye_lmk_Y_23'] # right inner corner pupil Y
+    df3D['RICP']['Z'] = data[' eye_lmk_Z_23'] # right inner corner pupil Z
+    #NB
+    df3D['NB']['X'] = data[' X_27'] # nose bridge X
+    df3D['NB']['Y'] = data[' Y_27'] # nose bridge Y
+    df3D['NB']['Z'] = data[' Z_27'] # nose bridge Z
+    #ROCE
+    df3D['ROCE']['X'] = data[' X_36'] # right outer corner eye X
+    df3D['ROCE']['Y'] = data[' Y_36'] # right outer corner eye Y
+    df3D['ROCE']['Z'] = data[' Z_36'] # right outer corner eye Z
+    #RICE
+    df3D['RICE']['X'] = data[' X_39'] # right inner corner eye X
+    df3D['RICE']['Y'] = data[' Y_39'] # right inner corner eye Y
+    df3D['RICE']['Z'] = data[' Z_39'] # right inner corner eye Z
+    #LOCE
+    df3D['LOCE']['X'] = data[' X_45'] # left outer corner eye X
+    df3D['LOCE']['Y'] = data[' Y_45'] # left outer corner eye Y
+    df3D['LOCE']['Z'] = data[' Z_45'] # left outer corner eye Z
+    #LICE
+    df3D['LICE']['X'] = data[' X_42'] # left inner corner eye X
+    df3D['LICE']['Y'] = data[' Y_42'] # left inner corner eye Y
+    df3D['LICE']['Z'] = data[' Z_42'] # left inner corner eye Z
+    return df3D
 
     
 def calcPD(data):
-    df = getLandmark(data)
+    """
+        Input: eye landmark data frame.
+        performs calculations on different landmarks to get PD
+        Returns: list of PD values. Mono and Dual PD  
+    """
+    df = getLandmark2D(data)
     print('start here')
     print(df['LICP'])
     print(df['RICP'])
-    geom = ((df['LICP'] - df['RICP'])**2).sum()
-    print(geom)
-    print(np.sqrt(geom))
+    euclidDist = dist.euclidean(df['LICP'],df['RICP'])
+    # ((df['LICP'] - df['RICP'])**2).sum()
+    print(euclidDist)
+    print("all ret values printed in calcPD")
+    return [df['LICP'],df['RICP'],euclidDist]
+    # print(np.sqrt(euclidDist))
     #calculating 3d distance
     # ocp_pd = 
     #est the mono pd by finding avg in iris
@@ -76,7 +155,3 @@ def calcPD(data):
     # print("here is eye avg est for X {}".format(avgeye))
     # print("calculated  mono pd est {}".format(avgeye-noseX27 ))
 
-data = pd.read_csv('andrewFace.csv')
-# data = pd.read_csv('andrewcalib.csv')
-
-calcPD(data)

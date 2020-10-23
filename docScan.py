@@ -34,7 +34,7 @@ print("STEP 1: Edge Detection")
 # cv2.imshow("Edged", edged)
 # cv2.waitKey(0)
 # cv2.destroyAllWindows()
-justEdge = np.nonzero(~edged) # ~ is the negate operator. it just prints out everything why? 
+justEdge = np.nonzero(~edged) 
 """
 Ok this is important. the ~ operator reverses the bits of an obj.
 The formula is essentially: (-x) - 1 for any x. So how does that help here?
@@ -58,11 +58,22 @@ for c in cnts:
 		screenCnt = approx
 		break
 # show the contour (outline) of the piece of paper
-# print("STEP 2: Find contours of paper")
-# cv2.drawContours(image, [screenCnt], -1, (0, 255, 0), 2)
-# cv2.imshow("Outline", image)
-# cv2.waitKey(0)
-# cv2.destroyAllWindows()
+print("STEP 2: Find contours of paper")
+cv2.drawContours(image, [screenCnt], -1, (0, 255, 0), 2)
+print(tuple(screenCnt[2,0]))
+print(tuple(screenCnt))
+tr_point =  tuple(screenCnt[0,0]) #tuple([613,160])
+tl_point = tuple(screenCnt[1,0]) #tuple([477,161])
+bl_point = tuple(screenCnt[2,0]) #tuple([476,246])
+br_point = tuple(screenCnt[3,0]) #tuple([612,244])
+print("these are the corner values of screencnt {}".format(screenCnt))
+cv2.circle(image,tr_point,4,(0,0,255),-1) #red
+cv2.circle(image,tl_point,4,(0,255,0),-1) #green
+cv2.circle(image,bl_point,4,(255,0,0),-1) #blue
+cv2.circle(image,br_point,8,(0,255,255),-1) #yellow
+cv2.imshow("Outline", image)
+cv2.waitKey(0)
+cv2.destroyAllWindows()
 
 # apply the four point transform to obtain a top-down
 # view of the original image
@@ -74,7 +85,7 @@ T = threshold_local(warped, 11, offset = 10, method = "gaussian")
 warped = (warped > T).astype("uint8") * 255
 # show the original and scanned images
 print("STEP 3: Apply perspective transform")
-cv2.imshow("Original", imutils.resize(orig, height = 650))
-cv2.imshow("Scanned", imutils.resize(warped, height = 650))
-cv2.waitKey(0)
+# cv2.imshow("Original", imutils.resize(orig, height = 650))
+# cv2.imshow("Scanned", imutils.resize(warped, height = 650))
+# cv2.waitKey(0)
 
