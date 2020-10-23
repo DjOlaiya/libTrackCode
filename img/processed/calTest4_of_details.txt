@@ -1,0 +1,13 @@
+Input:calTest4.jpg
+Input full path:/Users/djolay/Documents/SoftDev/libTrackCode/img/calTest4.jpg
+Camera parameters:1312.5,1312.5,960,540
+Output HOG:calTest4.hog
+Output image:calTest4.jpg
+Output aligned directory:calTest4_aligned
+Output csv:calTest4.csv
+Gaze: 1
+AUs: 1
+Landmarks 2D: 1
+Landmarks 3D: 1
+Pose: 1
+Shape parameters: 1
