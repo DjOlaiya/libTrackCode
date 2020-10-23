@@ -1,3 +1,7 @@
 {
+<<<<<<< HEAD
     "python.pythonPath": "venv/bin/python"
+=======
+    "python.pythonPath": "/Users/djolay/Documents/SoftDev/libTrackCode/venv/bin/python3"
+>>>>>>> 1398391af336e6e20c0c934d4bc3834f22dd0f97
 }
