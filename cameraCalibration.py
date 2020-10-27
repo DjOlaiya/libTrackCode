@@ -84,31 +84,3 @@ def load_coefficients(path):
     return [camera_matrix, dist_matrix]
 
 load_coefficients("./")
-# vcap = cv2.VideoCapture(0) # 0=camera
-# print("this is width {}".format(vcap.get(3)))
-# print("this is height {}".format(vcap.get(4)))
-# # while(True):
-# #     ret, frame = vcap.read()
-# #     cv2.imshow("frm",frame)
-# #     if cv2.waitKey(1) & 0xFF == ord('q'):
-# #         break
-
-
-# if vcap.isOpened(): 
-#     width  = vcap.get(cv2.CAP_PROP_FRAME_WIDTH)   # float
-#     height = vcap.get(cv2.CAP_PROP_FRAME_HEIGHT)  # float
-#     #print(cv2.CAP_PROP_FRAME_WIDTH, cv2.CAP_PROP_FRAME_HEIGHT) # 3, 4
-
-#     # or
-#     width  = vcap.get(3) # float
-#     height = vcap.get(4) # float
-
-#     print('width, height:', width, height)
-    
-#     fps = vcap.get(cv2.CAP_PROP_FPS)
-#     print('fps:', fps)  # float
-#     #print(cv2.CAP_PROP_FPS) # 5
-    
-#     frame_count = vcap.get(cv2.CAP_PROP_FRAME_COUNT)
-#     print('frames count:', frame_count)  # float
-#     #print(cv2.CAP_PROP_FRAME_COUNT) # 7

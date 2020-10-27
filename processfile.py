@@ -6,6 +6,7 @@ from scipy.spatial import distance as dist
 fdgdfgdf
 TO DO
 remove duplicated code
+fix white space issues
 """
 
 def getLandmark2D(data):
@@ -57,7 +58,7 @@ def getLandmark2D(data):
     #LICE
     df2D['LICE']['x'] = data[' x_42'] # left inner corner eye x
     df2D['LICE']['y'] = data[' y_42'] # left inner corner eye y
-
+    #2d does not need spaces in title. fix white s
     return df2D
 
 
@@ -131,11 +132,11 @@ def calcPD(data):
     print(df['RICP'])
     euclidDist = dist.euclidean(df['LICP'],df['RICP'])
     # ((df['LICP'] - df['RICP'])**2).sum()
-    print(euclidDist)
+    print("this is distance in pixels {}".format(euclidDist))
+
     print("all ret values printed in calcPD")
 
-    df3d = getLandmark3D
-    return [df['LICP'],df['RICP'],euclidDist]
+    # df3d = getLandmark3D
     # print(np.sqrt(euclidDist))
     #calculating 3d distance
     # ocp_pd = 
@@ -157,3 +158,9 @@ def calcPD(data):
     # print("here is eye avg est for X {}".format(avgeye))
     # print("calculated  mono pd est {}".format(avgeye-noseX27 ))
 
+
+    return [df['LICP'],df['RICP'],euclidDist]
+    
+data = pd.read_csv("img/processed/calTest6.csv")
+# checkdf = getLandmark2D(data)
+val = calcPD(data)
